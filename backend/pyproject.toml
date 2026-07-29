@@ -16,3 +16,6 @@ dev = [
     "pytest-asyncio>=1.4.0",
     "ruff>=0.16.0",
 ]
+
+[project.scripts]
+dev = "uvicorn app.main:app --reload"
