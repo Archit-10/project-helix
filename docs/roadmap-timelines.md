@@ -2,12 +2,12 @@
 
 **Phase 1 - Core Setup**
 
-Repository Setup
-Architecture Documentation
-Backend Skeleton
-Docker Environment
-Testing Infrastructure
-CI/CD
+Repository Setup  
+Architecture Documentation  
+Backend Skeleton  
+Docker Environment  
+Testing Infrastructure  
+CI/CD  
 Frontend Skeleton
 
 **Phase 2 - Knowledge Ingestion**
