@@ -19,3 +19,8 @@ dev = [
 
 [project.scripts]
 dev = "uvicorn app.main:app --reload"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+asyncio_mode = "auto"
