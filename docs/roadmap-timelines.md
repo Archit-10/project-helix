@@ -7,8 +7,9 @@ Architecture Documentation
 Backend Skeleton  
 Docker Environment  
 Testing Infrastructure  
-CI/CD  
-Frontend Skeleton
+CI/CD
+
+**Implementation Note:** The frontend is intentionally scheduled after the core backend capabilities (ingestion, indexing, retrieval etc.). This will allow the UI to be built against stable APIs and keeps early development focused on the platform's core functionality.
 
 **Phase 2 - Knowledge Ingestion**
 
