@@ -1,6 +1,8 @@
 from pathlib import Path
 
 from app.providers.markdown import MarkdownProvider
+from app.providers.pdf import PdfProvider
+from app.providers.text import TextProvider
 from app.services.ingestion import IngestionService
 
 
@@ -8,6 +10,8 @@ def test_markdown_ingestion():
     service = IngestionService(
         providers=[
             MarkdownProvider(),
+            TextProvider(),
+            PdfProvider(),
         ]
     )
 
