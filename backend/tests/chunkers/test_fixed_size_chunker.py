@@ -30,3 +30,9 @@ def test_fixed_size_chunker():
     assert chunks[0].content == "abcdefghij"
     assert chunks[1].content == "ijklmnopqr"
     assert chunks[2].content == "qrstuvwxyz"
+
+    # New metadata assertions
+    assert chunks[0].document_id == "dummy-hash"
+    assert chunks[1].document_id == "dummy-hash"
+    assert chunks[0].chunk_id != chunks[1].chunk_id
+    assert chunks[0].metadata.file_name == "sample.txt"

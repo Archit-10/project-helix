@@ -41,6 +41,7 @@ class FixedSizeChunker(Chunker):
 
             chunks.append(
                 DocumentChunk(
+                    document_id=document.metadata.content_hash,
                     chunk_id=str(uuid4()),
                     chunk_index=index,
                     content=content,
