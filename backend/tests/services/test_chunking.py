@@ -35,3 +35,5 @@ def test_chunking_service():
     assert chunks[1].chunk_index == 1
 
     assert chunks[0].metadata.file_name == "sample.txt"
+
+    assert all(chunk.document_id == "dummy-hash" for chunk in chunks)
