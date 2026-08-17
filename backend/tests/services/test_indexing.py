@@ -26,7 +26,7 @@ def test_indexing_service():
     )
 
     chunk = DocumentChunk(
-        document_id="doc-1",
+        document_id="dummy-hash",
         chunk_id="chunk-1",
         chunk_index=0,
         content="Project Helix is a RAG platform.",
@@ -35,7 +35,7 @@ def test_indexing_service():
 
     embedding = Embedding(
         chunk_id="chunk-1",
-        document_id="doc-1",
+        document_id="dummy-hash",
         vector=[0.1, 0.2, 0.3],
     )
 
@@ -63,12 +63,15 @@ def test_indexing_service():
     chunking_service.chunk.assert_called_once_with(document)
     embedding_service.embed.assert_called_once_with(chunk)
 
+    lexical_store.delete.assert_called_once_with("dummy-hash")
+    vector_store.delete.assert_called_once_with("dummy-hash")
+
     lexical_store.add.assert_called_once_with(chunk)
 
     vector_store.add.assert_called_once_with(
         VectorRecord(
             chunk_id="chunk-1",
-            document_id="doc-1",
+            document_id="dummy-hash",
             vector=[0.1, 0.2, 0.3],
         )
     )
