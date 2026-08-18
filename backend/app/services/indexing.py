@@ -27,16 +27,19 @@ class IndexingService:
         self,
         document: NormalizedDocument,
     ) -> tuple[list[DocumentChunk], list[Embedding]]:
-        chunks = self.chunking_service.chunk(document)
+        document_id = document.metadata.content_hash
 
-        for chunk in chunks:
-            self.lexical_store.add(chunk)
+        self.lexical_store.delete(document_id)
+        self.vector_store.delete(document_id)
+
+        chunks = self.chunking_service.chunk(document)
 
         embeddings = []
 
         for chunk in chunks:
             embedding = self.embedding_service.embed(chunk)
-            embeddings.append(embedding)
+
+            self.lexical_store.add(chunk)
 
             self.vector_store.add(
                 VectorRecord(
@@ -45,5 +48,7 @@ class IndexingService:
                     vector=embedding.vector,
                 )
             )
+
+            embeddings.append(embedding)
 
         return chunks, embeddings
