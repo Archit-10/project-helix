@@ -45,4 +45,5 @@ def test_semantic_retrieval():
     vector_store.search.assert_called_once_with(
         vector=[0.1, 0.2, 0.3],
         top_k=5,
+        metadata_filter=None,
     )

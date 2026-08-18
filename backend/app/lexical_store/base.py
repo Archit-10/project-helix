@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 from app.schemas.document_chunk import DocumentChunk
+from app.schemas.metadata_filter import MetadataFilter
 from app.schemas.search_result import SearchResult
 
 
@@ -16,6 +17,7 @@ class LexicalStore(ABC):
         self,
         query: str,
         top_k: int,
+        metadata_filter: MetadataFilter | None = None,
     ) -> list[SearchResult]:
         """Return the most relevant chunks for a query."""
 

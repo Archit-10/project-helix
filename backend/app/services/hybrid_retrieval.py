@@ -1,3 +1,4 @@
+from app.schemas.metadata_filter import MetadataFilter
 from app.schemas.search_result import SearchResult
 from app.services.lexical_retrieval import LexicalRetrievalService
 from app.services.retrieval import SemanticRetrievalService
@@ -15,6 +16,7 @@ class HybridRetrievalService:
     ) -> None:
         if semantic_weight < 0 or lexical_weight < 0:
             raise ValueError("retrieval weights cannot be negative")
+
         self.semantic_service = semantic_service
         self.lexical_service = lexical_service
         self.semantic_weight = semantic_weight
@@ -24,17 +26,21 @@ class HybridRetrievalService:
         self,
         query: str,
         top_k: int,
+        metadata_filter: MetadataFilter | None = None,
     ) -> list[SearchResult]:
         if top_k <= 0:
             raise ValueError("top_k must be greater than 0")
+
         semantic_results = self.semantic_service.search(
             query=query,
             top_k=top_k,
+            metadata_filter=metadata_filter,
         )
 
         lexical_results = self.lexical_service.search(
             query=query,
             top_k=top_k,
+            metadata_filter=metadata_filter,
         )
 
         scores: dict[tuple[str, str], float] = {}

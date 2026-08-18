@@ -1,3 +1,4 @@
+from app.schemas.metadata_filter import MetadataFilter
 from app.schemas.search_result import SearchResult
 from app.services.embedding import EmbeddingService
 from app.vector_store.base import VectorStore
@@ -18,10 +19,12 @@ class SemanticRetrievalService:
         self,
         query: str,
         top_k: int,
+        metadata_filter: MetadataFilter | None = None,
     ) -> list[SearchResult]:
         query_vector = self.embedding_service.embed_text(query)
 
         return self.vector_store.search(
             vector=query_vector,
             top_k=top_k,
+            metadata_filter=metadata_filter,
         )

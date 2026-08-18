@@ -1,4 +1,5 @@
 from app.lexical_store.base import LexicalStore
+from app.schemas.metadata_filter import MetadataFilter
 from app.schemas.search_result import SearchResult
 
 
@@ -15,8 +16,10 @@ class LexicalRetrievalService:
         self,
         query: str,
         top_k: int,
+        metadata_filter: MetadataFilter | None = None,
     ) -> list[SearchResult]:
         return self.lexical_store.search(
             query=query,
             top_k=top_k,
+            metadata_filter=metadata_filter,
         )
