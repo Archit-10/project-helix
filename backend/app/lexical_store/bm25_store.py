@@ -2,12 +2,13 @@ from rank_bm25 import BM25Okapi
 
 from app.lexical_store.base import LexicalStore
 from app.schemas.document_chunk import DocumentChunk
+from app.schemas.search_result import SearchResult
 
 
 class BM25Store(LexicalStore):
     """BM25-based lexical search store."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.chunks: list[DocumentChunk] = []
         self.index: BM25Okapi | None = None
 
@@ -24,7 +25,7 @@ class BM25Store(LexicalStore):
         self,
         query: str,
         top_k: int,
-    ) -> list[DocumentChunk]:
+    ) -> list[SearchResult]:
         if top_k <= 0:
             raise ValueError("top_k must be greater than 0")
 
@@ -44,7 +45,15 @@ class BM25Store(LexicalStore):
             key=lambda index: scores[index],
             reverse=True,
         )
-        return [self.chunks[index] for index in ranked_indices[:top_k]]
+
+        return [
+            SearchResult(
+                chunk_id=self.chunks[index].chunk_id,
+                document_id=self.chunks[index].document_id,
+                score=float(scores[index]),
+            )
+            for index in ranked_indices[:top_k]
+        ]
 
     def delete(self, document_id: str) -> None:
         self.chunks = [

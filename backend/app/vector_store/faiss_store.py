@@ -1,6 +1,7 @@
 import faiss
 import numpy as np
 
+from app.schemas.search_result import SearchResult
 from app.schemas.vector_record import VectorRecord
 from app.vector_store.base import VectorStore
 
@@ -28,7 +29,7 @@ class FAISSVectorStore(VectorStore):
         self,
         vector: list[float],
         top_k: int,
-    ) -> list[VectorRecord]:
+    ) -> list[SearchResult]:
         if top_k <= 0:
             raise ValueError("top_k must be greater than 0")
 
@@ -42,12 +43,20 @@ class FAISSVectorStore(VectorStore):
 
         faiss.normalize_L2(query)
 
-        _, indices = self.index.search(
+        scores, indices = self.index.search(
             query,
             min(top_k, self.index.ntotal),
         )
 
-        return [self.records[index] for index in indices[0] if index != -1]
+        return [
+            SearchResult(
+                chunk_id=self.records[index].chunk_id,
+                document_id=self.records[index].document_id,
+                score=float(scores[0][position]),
+            )
+            for position, index in enumerate(indices[0])
+            if index != -1
+        ]
 
     def delete(self, document_id: str) -> None:
         records_to_keep = [

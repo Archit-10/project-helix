@@ -33,6 +33,7 @@ def test_add_and_search():
 
     assert len(results) == 1
     assert results[0].chunk_id == "chunk-1"
+    assert results[0].score == pytest.approx(1.0)
 
 
 def test_search_returns_most_similar():

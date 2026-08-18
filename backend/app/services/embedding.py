@@ -17,3 +17,9 @@ class EmbeddingService:
         chunk: DocumentChunk,
     ) -> Embedding:
         return self.provider.embed(chunk)
+
+    def embed_text(
+        self,
+        text: str,
+    ) -> list[float]:
+        return self.provider.embed_text(text)
