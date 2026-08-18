@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 
+from app.schemas.document_metadata import DocumentMetadata
+
 
 class VectorRecord(BaseModel):
     """Represents a vector stored in the vector index."""
@@ -7,3 +9,4 @@ class VectorRecord(BaseModel):
     chunk_id: str
     document_id: str
     vector: list[float]
+    metadata: DocumentMetadata

@@ -73,5 +73,6 @@ def test_indexing_service():
             chunk_id="chunk-1",
             document_id="dummy-hash",
             vector=[0.1, 0.2, 0.3],
+            metadata=document.metadata,
         )
     )
