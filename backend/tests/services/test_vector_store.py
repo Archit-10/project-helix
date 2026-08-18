@@ -1,7 +1,21 @@
+from datetime import datetime
+from pathlib import Path
 from unittest.mock import MagicMock
 
+from app.schemas.document_metadata import DocumentMetadata
 from app.schemas.vector_record import VectorRecord
 from app.services.vector_store import VectorStoreService
+
+
+def create_metadata() -> DocumentMetadata:
+    return DocumentMetadata(
+        file_name="sample.txt",
+        extension=".txt",
+        path=Path("sample_documents/sample.txt"),
+        size_bytes=100,
+        last_modified=datetime.now(),
+        content_hash="dummy-hash",
+    )
 
 
 def test_vector_store_service():
@@ -11,6 +25,7 @@ def test_vector_store_service():
         chunk_id="chunk-1",
         document_id="doc-1",
         vector=[0.1, 0.2, 0.3],
+        metadata=create_metadata(),
     )
 
     store.search.return_value = [record]

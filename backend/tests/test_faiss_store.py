@@ -1,7 +1,25 @@
+from datetime import datetime
+from pathlib import Path
+
 import pytest
 
+from app.schemas.document_metadata import DocumentMetadata
 from app.schemas.vector_record import VectorRecord
 from app.vector_store.faiss_store import FAISSVectorStore
+
+
+def create_metadata(
+    file_name: str = "sample.txt",
+    extension: str = ".txt",
+) -> DocumentMetadata:
+    return DocumentMetadata(
+        file_name=file_name,
+        extension=extension,
+        path=Path(f"sample_documents/{file_name}"),
+        size_bytes=100,
+        last_modified=datetime.now(),
+        content_hash=f"{file_name}-hash",
+    )
 
 
 def test_search_empty_store():
@@ -22,6 +40,7 @@ def test_add_and_search():
         chunk_id="chunk-1",
         document_id="doc-1",
         vector=[1.0, 0.0, 0.0],
+        metadata=create_metadata(),
     )
 
     store.add(record)
@@ -44,6 +63,7 @@ def test_search_returns_most_similar():
             chunk_id="chunk-1",
             document_id="doc-1",
             vector=[1.0, 0.0, 0.0],
+            metadata=create_metadata(),
         )
     )
 
@@ -52,6 +72,7 @@ def test_search_returns_most_similar():
             chunk_id="chunk-2",
             document_id="doc-1",
             vector=[0.0, 1.0, 0.0],
+            metadata=create_metadata(),
         )
     )
 
@@ -71,6 +92,7 @@ def test_delete_document():
             chunk_id="chunk-1",
             document_id="doc-1",
             vector=[1.0, 0.0, 0.0],
+            metadata=create_metadata(),
         )
     )
 
@@ -79,6 +101,7 @@ def test_delete_document():
             chunk_id="chunk-2",
             document_id="doc-2",
             vector=[0.0, 1.0, 0.0],
+            metadata=create_metadata(),
         )
     )
 
