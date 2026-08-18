@@ -56,11 +56,13 @@ def test_hybrid_retrieval():
     semantic_service.search.assert_called_once_with(
         query="Kafka authentication",
         top_k=3,
+        metadata_filter=None,
     )
 
     lexical_service.search.assert_called_once_with(
         query="Kafka authentication",
         top_k=3,
+        metadata_filter=None,
     )
 
 

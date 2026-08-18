@@ -29,4 +29,5 @@ def test_lexical_retrieval():
     lexical_store.search.assert_called_once_with(
         query="Kafka authentication",
         top_k=5,
+        metadata_filter=None,
     )

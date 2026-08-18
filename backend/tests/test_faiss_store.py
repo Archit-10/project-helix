@@ -4,6 +4,7 @@ from pathlib import Path
 import pytest
 
 from app.schemas.document_metadata import DocumentMetadata
+from app.schemas.metadata_filter import MetadataFilter
 from app.schemas.vector_record import VectorRecord
 from app.vector_store.faiss_store import FAISSVectorStore
 
@@ -123,3 +124,107 @@ def test_search_invalid_top_k():
             vector=[1.0, 0.0, 0.0],
             top_k=0,
         )
+
+
+def test_search_with_metadata_filter():
+    store = FAISSVectorStore(dimension=3)
+
+    store.add(
+        VectorRecord(
+            chunk_id="chunk-1",
+            document_id="doc-1",
+            vector=[1.0, 0.0, 0.0],
+            metadata=create_metadata(
+                file_name="security.md",
+                extension=".md",
+            ),
+        )
+    )
+
+    store.add(
+        VectorRecord(
+            chunk_id="chunk-2",
+            document_id="doc-2",
+            vector=[0.99, 0.01, 0.0],
+            metadata=create_metadata(
+                file_name="architecture.txt",
+                extension=".txt",
+            ),
+        )
+    )
+
+    results = store.search(
+        vector=[1.0, 0.0, 0.0],
+        top_k=5,
+        metadata_filter=MetadataFilter(
+            extension=".md",
+        ),
+    )
+
+    assert len(results) == 1
+    assert results[0].chunk_id == "chunk-1"
+
+
+def test_search_with_non_matching_metadata_filter():
+    store = FAISSVectorStore(dimension=3)
+
+    store.add(
+        VectorRecord(
+            chunk_id="chunk-1",
+            document_id="doc-1",
+            vector=[1.0, 0.0, 0.0],
+            metadata=create_metadata(
+                file_name="security.md",
+                extension=".md",
+            ),
+        )
+    )
+
+    results = store.search(
+        vector=[1.0, 0.0, 0.0],
+        top_k=5,
+        metadata_filter=MetadataFilter(
+            extension=".pdf",
+        ),
+    )
+
+    assert results == []
+
+
+def test_metadata_filter_is_applied_before_top_k():
+    store = FAISSVectorStore(dimension=3)
+
+    store.add(
+        VectorRecord(
+            chunk_id="chunk-1",
+            document_id="doc-1",
+            vector=[1.0, 0.0, 0.0],
+            metadata=create_metadata(
+                file_name="notes.txt",
+                extension=".txt",
+            ),
+        )
+    )
+
+    store.add(
+        VectorRecord(
+            chunk_id="chunk-2",
+            document_id="doc-2",
+            vector=[0.9, 0.1, 0.0],
+            metadata=create_metadata(
+                file_name="security.md",
+                extension=".md",
+            ),
+        )
+    )
+
+    results = store.search(
+        vector=[1.0, 0.0, 0.0],
+        top_k=1,
+        metadata_filter=MetadataFilter(
+            extension=".md",
+        ),
+    )
+
+    assert len(results) == 1
+    assert results[0].chunk_id == "chunk-2"

@@ -1,8 +1,10 @@
 import faiss
 import numpy as np
 
+from app.schemas.metadata_filter import MetadataFilter
 from app.schemas.search_result import SearchResult
 from app.schemas.vector_record import VectorRecord
+from app.utils.metadata_filter import matches_metadata
 from app.vector_store.base import VectorStore
 
 
@@ -29,6 +31,7 @@ class FAISSVectorStore(VectorStore):
         self,
         vector: list[float],
         top_k: int,
+        metadata_filter: MetadataFilter | None = None,
     ) -> list[SearchResult]:
         if top_k <= 0:
             raise ValueError("top_k must be greater than 0")
@@ -42,21 +45,37 @@ class FAISSVectorStore(VectorStore):
         )
 
         faiss.normalize_L2(query)
+        candidate_count = self.index.ntotal
 
         scores, indices = self.index.search(
             query,
-            min(top_k, self.index.ntotal),
+            candidate_count,
         )
 
-        return [
-            SearchResult(
-                chunk_id=self.records[index].chunk_id,
-                document_id=self.records[index].document_id,
-                score=float(scores[0][position]),
+        results: list[SearchResult] = []
+
+        for position, index in enumerate(indices[0]):
+            if index == -1:
+                continue
+            record = self.records[index]
+
+            if not matches_metadata(
+                record.metadata,
+                metadata_filter,
+            ):
+                continue
+
+            results.append(
+                SearchResult(
+                    chunk_id=record.chunk_id,
+                    document_id=record.document_id,
+                    score=float(scores[0][position]),
+                )
             )
-            for position, index in enumerate(indices[0])
-            if index != -1
-        ]
+            if len(results) == top_k:
+                break
+
+        return results
 
     def delete(self, document_id: str) -> None:
         records_to_keep = [

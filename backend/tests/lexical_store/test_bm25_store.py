@@ -6,12 +6,15 @@ import pytest
 from app.lexical_store.bm25_store import BM25Store
 from app.schemas.document_chunk import DocumentChunk
 from app.schemas.document_metadata import DocumentMetadata
+from app.schemas.metadata_filter import MetadataFilter
 
 
 def create_chunk(
     document_id: str,
     chunk_id: str,
     content: str,
+    file_name: str = "sample.txt",
+    extension: str = ".txt",
 ) -> DocumentChunk:
     return DocumentChunk(
         document_id=document_id,
@@ -19,12 +22,12 @@ def create_chunk(
         chunk_index=0,
         content=content,
         metadata=DocumentMetadata(
-            file_name="sample.txt",
-            extension=".txt",
-            path=Path("sample_documents/sample.txt"),
+            file_name=file_name,
+            extension=extension,
+            path=Path(f"sample_documents/{file_name}"),
             size_bytes=100,
             last_modified=datetime.now(),
-            content_hash="dummy-hash",
+            content_hash=f"{file_name}-hash",
         ),
     )
 
@@ -152,3 +155,96 @@ def test_top_k_limits_results():
     )
 
     assert len(results) == 1
+
+
+def test_search_with_metadata_filter():
+    store = BM25Store()
+
+    store.add(
+        create_chunk(
+            "doc-1",
+            "chunk-1",
+            "Kafka authentication",
+            file_name="security.md",
+            extension=".md",
+        )
+    )
+
+    store.add(
+        create_chunk(
+            "doc-2",
+            "chunk-2",
+            "Kafka authentication",
+            file_name="architecture.md",
+            extension=".md",
+        )
+    )
+
+    results = store.search(
+        query="Kafka authentication",
+        top_k=5,
+        metadata_filter=MetadataFilter(
+            file_name="security.md",
+        ),
+    )
+
+    assert len(results) == 1
+    assert results[0].chunk_id == "chunk-1"
+
+
+def test_search_with_non_matching_metadata_filter():
+    store = BM25Store()
+
+    store.add(
+        create_chunk(
+            "doc-1",
+            "chunk-1",
+            "Kafka authentication",
+            file_name="security.md",
+        )
+    )
+
+    results = store.search(
+        query="Kafka authentication",
+        top_k=5,
+        metadata_filter=MetadataFilter(
+            file_name="architecture.md",
+        ),
+    )
+
+    assert results == []
+
+
+def test_search_with_extension_filter():
+    store = BM25Store()
+
+    store.add(
+        create_chunk(
+            "doc-1",
+            "chunk-1",
+            "Kafka authentication",
+            file_name="security.md",
+            extension=".md",
+        )
+    )
+
+    store.add(
+        create_chunk(
+            "doc-2",
+            "chunk-2",
+            "Kafka authentication",
+            file_name="security.txt",
+            extension=".txt",
+        )
+    )
+
+    results = store.search(
+        query="Kafka authentication",
+        top_k=5,
+        metadata_filter=MetadataFilter(
+            extension=".md",
+        ),
+    )
+
+    assert len(results) == 1
+    assert results[0].chunk_id == "chunk-1"

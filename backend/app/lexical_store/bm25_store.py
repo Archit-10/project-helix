@@ -2,7 +2,9 @@ from rank_bm25 import BM25Okapi
 
 from app.lexical_store.base import LexicalStore
 from app.schemas.document_chunk import DocumentChunk
+from app.schemas.metadata_filter import MetadataFilter
 from app.schemas.search_result import SearchResult
+from app.utils.metadata_filter import matches_metadata
 
 
 class BM25Store(LexicalStore):
@@ -25,6 +27,7 @@ class BM25Store(LexicalStore):
         self,
         query: str,
         top_k: int,
+        metadata_filter: MetadataFilter | None = None,
     ) -> list[SearchResult]:
         if top_k <= 0:
             raise ValueError("top_k must be greater than 0")
@@ -41,6 +44,10 @@ class BM25Store(LexicalStore):
                 index
                 for index, chunk in enumerate(self.chunks)
                 if set(query_tokens) & set(chunk.content.lower().split())
+                and matches_metadata(
+                    chunk.metadata,
+                    metadata_filter,
+                )
             ),
             key=lambda index: scores[index],
             reverse=True,
