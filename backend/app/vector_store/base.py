@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from app.schemas.search_result import SearchResult
 from app.schemas.vector_record import VectorRecord
 
 
@@ -15,7 +16,7 @@ class VectorStore(ABC):
         self,
         vector: list[float],
         top_k: int,
-    ) -> list[VectorRecord]:
+    ) -> list[SearchResult]:
         """Search for the most similar vectors."""
 
     @abstractmethod

@@ -23,3 +23,18 @@ def test_embedding_service():
 
     assert result == expected
     provider.embed.assert_called_once_with(chunk)
+
+
+def test_embedding_service_text():
+    provider = MagicMock()
+
+    expected = [0.1, 0.2, 0.3]
+
+    provider.embed_text.return_value = expected
+
+    service = EmbeddingService(provider=provider)
+
+    result = service.embed_text("How does authentication work?")
+
+    assert result == expected
+    provider.embed_text.assert_called_once_with("How does authentication work?")

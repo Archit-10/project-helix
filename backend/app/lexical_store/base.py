@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 from app.schemas.document_chunk import DocumentChunk
+from app.schemas.search_result import SearchResult
 
 
 class LexicalStore(ABC):
@@ -15,7 +16,7 @@ class LexicalStore(ABC):
         self,
         query: str,
         top_k: int,
-    ) -> list[DocumentChunk]:
+    ) -> list[SearchResult]:
         """Return the most relevant chunks for a query."""
 
     @abstractmethod

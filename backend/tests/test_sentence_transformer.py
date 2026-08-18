@@ -37,3 +37,16 @@ def test_sentence_transformer_provider():
     assert result.chunk_id == "chunk-1"
     assert result.document_id == "doc-1"
     assert result.vector == [0.1, 0.2, 0.3]
+
+
+def test_sentence_transformer_provider_embed_text():
+    fake_vector = np.array([0.1, 0.2, 0.3])
+
+    with patch("app.embeddings.sentence_transformer.SentenceTransformer") as mock_model:
+        mock_model.return_value.encode.return_value = fake_vector
+
+        provider = SentenceTransformerProvider()
+
+        result = provider.embed_text("How does authentication work?")
+
+    assert result == [0.1, 0.2, 0.3]

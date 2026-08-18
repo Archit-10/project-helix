@@ -13,3 +13,10 @@ class EmbeddingProvider(ABC):
         chunk: DocumentChunk,
     ) -> Embedding:
         """Generate an embedding for a document chunk."""
+
+    @abstractmethod
+    def embed_text(
+        self,
+        text: str,
+    ) -> list[float]:
+        """Generate an embedding for arbitrary text."""

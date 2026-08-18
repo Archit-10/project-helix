@@ -25,3 +25,11 @@ class SentenceTransformerProvider(EmbeddingProvider):
             document_id=chunk.document_id,
             vector=vector.tolist(),
         )
+
+    def embed_text(self, text: str) -> list[float]:
+        vector = self.model.encode(
+            text,
+            convert_to_numpy=True,
+        )
+
+        return vector.tolist()
