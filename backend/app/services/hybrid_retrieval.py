@@ -1,3 +1,4 @@
+from app.rerankers.base import Reranker
 from app.schemas.metadata_filter import MetadataFilter
 from app.schemas.search_result import SearchResult
 from app.services.lexical_retrieval import LexicalRetrievalService
@@ -11,6 +12,7 @@ class HybridRetrievalService:
         self,
         semantic_service: SemanticRetrievalService,
         lexical_service: LexicalRetrievalService,
+        reranker: Reranker,
         semantic_weight: float = 0.5,
         lexical_weight: float = 0.5,
     ) -> None:
@@ -19,6 +21,7 @@ class HybridRetrievalService:
 
         self.semantic_service = semantic_service
         self.lexical_service = lexical_service
+        self.reranker = reranker
         self.semantic_weight = semantic_weight
         self.lexical_weight = lexical_weight
 
@@ -59,11 +62,17 @@ class HybridRetrievalService:
             reverse=True,
         )
 
-        return [
+        candidates = [
             SearchResult(
                 document_id=document_id,
                 chunk_id=chunk_id,
                 score=score,
             )
-            for (document_id, chunk_id), score in ranked_results[:top_k]
+            for (document_id, chunk_id), score in ranked_results
         ]
+
+        return self.reranker.rerank(
+            query=query,
+            results=candidates,
+            top_k=top_k,
+        )

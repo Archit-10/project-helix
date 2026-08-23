@@ -1,4 +1,5 @@
 from app.dependencies.retrieval import get_retrieval_service
+from app.rerankers.score_based import ScoreBasedReranker
 from app.services.hybrid_retrieval import HybridRetrievalService
 
 
@@ -8,6 +9,7 @@ def test_get_retrieval_service():
     service = get_retrieval_service()
 
     assert isinstance(service, HybridRetrievalService)
+    assert isinstance(service.reranker, ScoreBasedReranker)
 
 
 def test_get_retrieval_service_is_cached():
