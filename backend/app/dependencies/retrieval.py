@@ -5,6 +5,7 @@ from app.dependencies.stores import (
     get_vector_store,
 )
 from app.embeddings.sentence_transformer import SentenceTransformerProvider
+from app.rerankers.score_based import ScoreBasedReranker
 from app.services.embedding import EmbeddingService
 from app.services.hybrid_retrieval import HybridRetrievalService
 from app.services.lexical_retrieval import LexicalRetrievalService
@@ -31,7 +32,10 @@ def get_retrieval_service() -> HybridRetrievalService:
         lexical_store=lexical_store,
     )
 
+    reranker = ScoreBasedReranker()
+
     return HybridRetrievalService(
         semantic_service=semantic_service,
         lexical_service=lexical_service,
+        reranker=reranker,
     )
