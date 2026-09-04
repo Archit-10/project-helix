@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import health, index, search, version
+from app.api.v1.endpoints import generate, health, index, search, version
 
 api_router = APIRouter()
 
@@ -19,4 +19,8 @@ api_router.include_router(
 api_router.include_router(
     index.router,
     tags=["Indexing"],
+)
+api_router.include_router(
+    generate.router,
+    tags=["Generation"],
 )
