@@ -7,3 +7,4 @@ class SearchResult(BaseModel):
     chunk_id: str
     document_id: str
     score: float
+    content: str

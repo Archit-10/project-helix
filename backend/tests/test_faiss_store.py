@@ -42,6 +42,7 @@ def test_add_and_search():
         document_id="doc-1",
         vector=[1.0, 0.0, 0.0],
         metadata=create_metadata(),
+        content="Kafka authentication content.",
     )
 
     store.add(record)
@@ -65,6 +66,7 @@ def test_search_returns_most_similar():
             document_id="doc-1",
             vector=[1.0, 0.0, 0.0],
             metadata=create_metadata(),
+            content="Kafka authentication content.",
         )
     )
 
@@ -74,6 +76,7 @@ def test_search_returns_most_similar():
             document_id="doc-1",
             vector=[0.0, 1.0, 0.0],
             metadata=create_metadata(),
+            content="Database architecture content.",
         )
     )
 
@@ -94,6 +97,7 @@ def test_delete_document():
             document_id="doc-1",
             vector=[1.0, 0.0, 0.0],
             metadata=create_metadata(),
+            content="Kafka authentication content.",
         )
     )
 
@@ -103,6 +107,7 @@ def test_delete_document():
             document_id="doc-2",
             vector=[0.0, 1.0, 0.0],
             metadata=create_metadata(),
+            content="Database architecture content.",
         )
     )
 
@@ -138,6 +143,7 @@ def test_search_with_metadata_filter():
                 file_name="security.md",
                 extension=".md",
             ),
+            content="Security authentication documentation.",
         )
     )
 
@@ -150,6 +156,7 @@ def test_search_with_metadata_filter():
                 file_name="architecture.txt",
                 extension=".txt",
             ),
+            content="System architecture documentation.",
         )
     )
 
@@ -177,6 +184,7 @@ def test_search_with_non_matching_metadata_filter():
                 file_name="security.md",
                 extension=".md",
             ),
+            content="Security authentication documentation.",
         )
     )
 
@@ -203,6 +211,7 @@ def test_metadata_filter_is_applied_before_top_k():
                 file_name="notes.txt",
                 extension=".txt",
             ),
+            content="General project notes.",
         )
     )
 
@@ -215,6 +224,7 @@ def test_metadata_filter_is_applied_before_top_k():
                 file_name="security.md",
                 extension=".md",
             ),
+            content="Security authentication documentation.",
         )
     )
 

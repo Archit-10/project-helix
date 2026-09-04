@@ -26,6 +26,7 @@ def test_vector_store_service():
         document_id="doc-1",
         vector=[0.1, 0.2, 0.3],
         metadata=create_metadata(),
+        content="test content",
     )
 
     store.search.return_value = [record]
@@ -42,10 +43,12 @@ def test_vector_store_service():
     service.delete("doc-1")
 
     store.add.assert_called_once_with(record)
+
     store.search.assert_called_once_with(
         [0.1, 0.2, 0.3],
         5,
     )
+
     store.delete.assert_called_once_with("doc-1")
 
     assert results == [record]

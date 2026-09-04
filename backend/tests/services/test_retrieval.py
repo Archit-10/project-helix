@@ -14,6 +14,7 @@ def test_semantic_retrieval():
             chunk_id="chunk-1",
             document_id="doc-1",
             score=0.98,
+            content="Authentication content.",
         )
     ]
 

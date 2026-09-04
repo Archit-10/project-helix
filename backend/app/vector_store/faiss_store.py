@@ -70,6 +70,7 @@ class FAISSVectorStore(VectorStore):
                     chunk_id=record.chunk_id,
                     document_id=record.document_id,
                     score=float(scores[0][position]),
+                    content=record.content,
                 )
             )
             if len(results) == top_k:

@@ -47,14 +47,22 @@ class HybridRetrievalService:
         )
 
         scores: dict[tuple[str, str], float] = {}
+        result_map: dict[tuple[str, str], SearchResult] = {}
 
         for result in semantic_results:
             key = (result.document_id, result.chunk_id)
+
             scores[key] = scores.get(key, 0.0) + (self.semantic_weight * result.score)
+
+            result_map[key] = result
 
         for result in lexical_results:
             key = (result.document_id, result.chunk_id)
+
             scores[key] = scores.get(key, 0.0) + (self.lexical_weight * result.score)
+
+            if key not in result_map:
+                result_map[key] = result
 
         ranked_results = sorted(
             scores.items(),
@@ -67,6 +75,7 @@ class HybridRetrievalService:
                 document_id=document_id,
                 chunk_id=chunk_id,
                 score=score,
+                content=result_map[(document_id, chunk_id)].content,
             )
             for (document_id, chunk_id), score in ranked_results
         ]

@@ -8,9 +8,24 @@ def test_score_based_reranker_sorts_by_score():
     reranker = ScoreBasedReranker()
 
     results = [
-        SearchResult(chunk_id="chunk-1", document_id="doc-1", score=0.4),
-        SearchResult(chunk_id="chunk-2", document_id="doc-2", score=0.9),
-        SearchResult(chunk_id="chunk-3", document_id="doc-3", score=0.6),
+        SearchResult(
+            chunk_id="chunk-1",
+            document_id="doc-1",
+            score=0.4,
+            content="Kafka authentication content one.",
+        ),
+        SearchResult(
+            chunk_id="chunk-2",
+            document_id="doc-2",
+            score=0.9,
+            content="Kafka authentication content two.",
+        ),
+        SearchResult(
+            chunk_id="chunk-3",
+            document_id="doc-3",
+            score=0.6,
+            content="Kafka authentication content three.",
+        ),
     ]
 
     actual = reranker.rerank(
@@ -30,9 +45,24 @@ def test_score_based_reranker_limits_top_k():
     reranker = ScoreBasedReranker()
 
     results = [
-        SearchResult(chunk_id="chunk-1", document_id="doc-1", score=0.4),
-        SearchResult(chunk_id="chunk-2", document_id="doc-2", score=0.9),
-        SearchResult(chunk_id="chunk-3", document_id="doc-3", score=0.6),
+        SearchResult(
+            chunk_id="chunk-1",
+            document_id="doc-1",
+            score=0.4,
+            content="Kafka authentication content one.",
+        ),
+        SearchResult(
+            chunk_id="chunk-2",
+            document_id="doc-2",
+            score=0.9,
+            content="Kafka authentication content two.",
+        ),
+        SearchResult(
+            chunk_id="chunk-3",
+            document_id="doc-3",
+            score=0.6,
+            content="Kafka authentication content three.",
+        ),
     ]
 
     actual = reranker.rerank(
@@ -42,6 +72,7 @@ def test_score_based_reranker_limits_top_k():
     )
 
     assert len(actual) == 2
+
     assert [result.chunk_id for result in actual] == [
         "chunk-2",
         "chunk-3",

@@ -13,6 +13,7 @@ def test_search_endpoint(client):
             chunk_id="chunk-1",
             document_id="doc-1",
             score=0.95,
+            content="Kafka authentication content.",
         )
     ]
 
@@ -33,6 +34,7 @@ def test_search_endpoint(client):
             "chunk_id": "chunk-1",
             "document_id": "doc-1",
             "score": 0.95,
+            "content": "Kafka authentication content.",
         }
     ]
 
@@ -77,6 +79,7 @@ def test_search_with_metadata_filter(client):
             chunk_id="chunk-1",
             document_id="doc-1",
             score=0.91,
+            content="Kafka authentication content.",
         )
     ]
 
@@ -100,6 +103,7 @@ def test_search_with_metadata_filter(client):
             "chunk_id": "chunk-1",
             "document_id": "doc-1",
             "score": 0.91,
+            "content": "Kafka authentication content.",
         }
     ]
 

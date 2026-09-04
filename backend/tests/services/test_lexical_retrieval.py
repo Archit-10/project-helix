@@ -10,6 +10,7 @@ def test_lexical_retrieval():
         chunk_id="chunk-1",
         document_id="doc-1",
         score=2.5,
+        content="Kafka authentication content.",
     )
 
     lexical_store = Mock(spec=LexicalStore)

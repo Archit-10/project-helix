@@ -9,4 +9,5 @@ class VectorRecord(BaseModel):
     chunk_id: str
     document_id: str
     vector: list[float]
+    content: str
     metadata: DocumentMetadata

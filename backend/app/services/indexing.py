@@ -47,6 +47,7 @@ class IndexingService:
                     document_id=embedding.document_id,
                     vector=embedding.vector,
                     metadata=chunk.metadata,
+                    content=chunk.content,
                 )
             )
 
