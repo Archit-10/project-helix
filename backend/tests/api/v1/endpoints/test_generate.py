@@ -17,8 +17,8 @@ def test_generate():
         "Kafka uses SASL for authentication."
     )
 
-    app.dependency_overrides[get_response_generation_service] = (
-        lambda: response_generation_service
+    app.dependency_overrides[get_response_generation_service] = lambda: (
+        response_generation_service
     )
 
     response = client.post(
