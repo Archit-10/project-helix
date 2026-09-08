@@ -5,7 +5,7 @@ from app.schemas.metadata_filter import MetadataFilter
 from app.schemas.search_result import SearchResult
 
 
-def test_search_endpoint(client):
+def test_search_endpoint(client, metadata):
     retrieval_service = Mock()
 
     retrieval_service.search.return_value = [
@@ -14,6 +14,7 @@ def test_search_endpoint(client):
             document_id="doc-1",
             score=0.95,
             content="Kafka authentication content.",
+            metadata=metadata,
         )
     ]
 
@@ -29,14 +30,15 @@ def test_search_endpoint(client):
 
     assert response.status_code == 200
 
-    assert response.json() == [
-        {
-            "chunk_id": "chunk-1",
-            "document_id": "doc-1",
-            "score": 0.95,
-            "content": "Kafka authentication content.",
-        }
-    ]
+    expected = SearchResult(
+        chunk_id="chunk-1",
+        document_id="doc-1",
+        score=0.95,
+        content="Kafka authentication content.",
+        metadata=metadata,
+    ).model_dump(mode="json")
+
+    assert response.json() == [expected]
 
     retrieval_service.search.assert_called_once_with(
         query="Kafka authentication",
@@ -71,7 +73,7 @@ def test_search_rejects_invalid_top_k(client):
     assert response.status_code == 422
 
 
-def test_search_with_metadata_filter(client):
+def test_search_with_metadata_filter(client, metadata):
     retrieval_service = Mock()
 
     retrieval_service.search.return_value = [
@@ -80,6 +82,7 @@ def test_search_with_metadata_filter(client):
             document_id="doc-1",
             score=0.91,
             content="Kafka authentication content.",
+            metadata=metadata,
         )
     ]
 
@@ -98,14 +101,15 @@ def test_search_with_metadata_filter(client):
 
     assert response.status_code == 200
 
-    assert response.json() == [
-        {
-            "chunk_id": "chunk-1",
-            "document_id": "doc-1",
-            "score": 0.91,
-            "content": "Kafka authentication content.",
-        }
-    ]
+    expected = SearchResult(
+        chunk_id="chunk-1",
+        document_id="doc-1",
+        score=0.91,
+        content="Kafka authentication content.",
+        metadata=metadata,
+    ).model_dump(mode="json")
+
+    assert response.json() == [expected]
 
     retrieval_service.search.assert_called_once_with(
         query="Kafka authentication",

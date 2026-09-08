@@ -76,6 +76,7 @@ class HybridRetrievalService:
                 chunk_id=chunk_id,
                 score=score,
                 content=result_map[(document_id, chunk_id)].content,
+                metadata=result_map[(document_id, chunk_id)].metadata,
             )
             for (document_id, chunk_id), score in ranked_results
         ]

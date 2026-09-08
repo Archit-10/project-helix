@@ -59,6 +59,7 @@ class BM25Store(LexicalStore):
                 document_id=self.chunks[index].document_id,
                 score=float(scores[index]),
                 content=self.chunks[index].content,
+                metadata=self.chunks[index].metadata,
             )
             for index in ranked_indices[:top_k]
         ]

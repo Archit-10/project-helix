@@ -4,7 +4,7 @@ from app.rerankers.score_based import ScoreBasedReranker
 from app.schemas.search_result import SearchResult
 
 
-def test_score_based_reranker_sorts_by_score():
+def test_score_based_reranker_sorts_by_score(metadata):
     reranker = ScoreBasedReranker()
 
     results = [
@@ -13,18 +13,21 @@ def test_score_based_reranker_sorts_by_score():
             document_id="doc-1",
             score=0.4,
             content="Kafka authentication content one.",
+            metadata=metadata,
         ),
         SearchResult(
             chunk_id="chunk-2",
             document_id="doc-2",
             score=0.9,
             content="Kafka authentication content two.",
+            metadata=metadata,
         ),
         SearchResult(
             chunk_id="chunk-3",
             document_id="doc-3",
             score=0.6,
             content="Kafka authentication content three.",
+            metadata=metadata,
         ),
     ]
 
@@ -41,7 +44,7 @@ def test_score_based_reranker_sorts_by_score():
     ]
 
 
-def test_score_based_reranker_limits_top_k():
+def test_score_based_reranker_limits_top_k(metadata):
     reranker = ScoreBasedReranker()
 
     results = [
@@ -50,18 +53,21 @@ def test_score_based_reranker_limits_top_k():
             document_id="doc-1",
             score=0.4,
             content="Kafka authentication content one.",
+            metadata=metadata,
         ),
         SearchResult(
             chunk_id="chunk-2",
             document_id="doc-2",
             score=0.9,
             content="Kafka authentication content two.",
+            metadata=metadata,
         ),
         SearchResult(
             chunk_id="chunk-3",
             document_id="doc-3",
             score=0.6,
             content="Kafka authentication content three.",
+            metadata=metadata,
         ),
     ]
 
