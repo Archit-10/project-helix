@@ -98,3 +98,60 @@ def test_ollama_missing_response(mock_post):
         match="Invalid response",
     ):
         llm.generate(create_prompt())
+
+
+@patch("app.llm.ollama.requests.post")
+def test_ollama_generate_stream(mock_post):
+    mock_response = Mock()
+
+    mock_response.iter_lines.return_value = [
+        b'{"response":"Kafka","done":false}',
+        b'{"response":" uses","done":false}',
+        b'{"response":" SASL","done":false}',
+        b'{"response":" authentication.","done":true}',
+    ]
+
+    mock_post.return_value = mock_response
+
+    llm = OllamaLLM(settings=create_settings())
+
+    result = list(llm.generate_stream(create_prompt()))
+
+    assert result == [
+        "Kafka",
+        " uses",
+        " SASL",
+        " authentication.",
+    ]
+
+    mock_post.assert_called_once_with(
+        "http://test-ollama:11434/api/generate",
+        json={
+            "model": "test-model",
+            "system": "You are an engineering assistant.",
+            "prompt": "How does Kafka authentication work?",
+            "stream": True,
+        },
+        stream=True,
+        timeout=60,
+    )
+
+
+@patch("app.llm.ollama.requests.post")
+def test_ollama_generate_stream_invalid_json(mock_post):
+    mock_response = Mock()
+
+    mock_response.iter_lines.return_value = [
+        b'{"response":"Kafka","done":false}',
+        b"invalid-json",
+    ]
+
+    mock_post.return_value = mock_response
+
+    llm = OllamaLLM(settings=create_settings())
+
+    with pytest.raises(
+        LLMGenerationError,
+        match="Invalid response",
+    ):
+        list(llm.generate_stream(create_prompt()))
