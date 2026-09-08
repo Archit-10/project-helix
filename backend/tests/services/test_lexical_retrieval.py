@@ -5,12 +5,13 @@ from app.schemas.search_result import SearchResult
 from app.services.lexical_retrieval import LexicalRetrievalService
 
 
-def test_lexical_retrieval():
+def test_lexical_retrieval(metadata):
     result = SearchResult(
         chunk_id="chunk-1",
         document_id="doc-1",
         score=2.5,
         content="Kafka authentication content.",
+        metadata=metadata,
     )
 
     lexical_store = Mock(spec=LexicalStore)

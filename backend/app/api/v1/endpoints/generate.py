@@ -22,10 +22,8 @@ async def generate(
         get_response_generation_service,
     ),
 ) -> GenerationResponse:
-    answer = response_generation_service.generate(
+    return response_generation_service.generate(
         query=request.query,
         top_k=request.top_k,
         metadata_filter=request.metadata_filter,
     )
-
-    return GenerationResponse(answer=answer)

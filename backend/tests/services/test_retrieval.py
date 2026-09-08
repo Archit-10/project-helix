@@ -6,7 +6,7 @@ from app.services.retrieval import SemanticRetrievalService
 from app.vector_store.base import VectorStore
 
 
-def test_semantic_retrieval():
+def test_semantic_retrieval(metadata):
     query = "How does authentication work?"
 
     results = [
@@ -15,6 +15,7 @@ def test_semantic_retrieval():
             document_id="doc-1",
             score=0.98,
             content="Authentication content.",
+            metadata=metadata,
         )
     ]
 

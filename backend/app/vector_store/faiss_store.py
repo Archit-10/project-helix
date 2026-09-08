@@ -71,6 +71,7 @@ class FAISSVectorStore(VectorStore):
                     document_id=record.document_id,
                     score=float(scores[0][position]),
                     content=record.content,
+                    metadata=record.metadata,
                 )
             )
             if len(results) == top_k:
