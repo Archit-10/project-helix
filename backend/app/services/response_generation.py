@@ -1,6 +1,9 @@
+from collections.abc import Iterator
+
 from app.llm.base import LLM
 from app.schemas.generation_response import GenerationResponse
 from app.schemas.metadata_filter import MetadataFilter
+from app.schemas.stream_event import StreamEvent
 from app.services.citation_generation import CitationGenerator
 from app.services.prompt_builder import PromptBuilder
 from app.services.retrieval import SemanticRetrievalService
@@ -46,3 +49,35 @@ class ResponseGenerationService:
             answer=answer,
             citations=citations,
         )
+
+    def generate_stream(
+        self,
+        query: str,
+        top_k: int,
+        metadata_filter: MetadataFilter | None = None,
+    ) -> Iterator[StreamEvent]:
+        results = self.retrieval_service.search(
+            query=query,
+            top_k=top_k,
+            metadata_filter=metadata_filter,
+        )
+
+        prompt = self.prompt_builder.build(
+            query=query,
+            results=results,
+        )
+
+        for chunk in self.llm.generate_stream(prompt):
+            yield StreamEvent(
+                type="token",
+                content=chunk,
+            )
+
+        citations = self.citation_generator.generate(results)
+
+        yield StreamEvent(
+            type="citations",
+            citations=citations,
+        )
+
+        yield StreamEvent(type="done")
