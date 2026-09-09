@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from app.api.v1.router import api_router
 from app.config.settings import get_settings
 from app.core.logging import configure_logging
+from app.middleware.http_logging import HTTPLoggingMiddleware
 
 settings = get_settings()
 
@@ -26,6 +27,8 @@ def create_app() -> FastAPI:
         version=settings.VERSION,
         lifespan=lifespan,
     )
+
+    app.add_middleware(HTTPLoggingMiddleware)
 
     app.include_router(
         api_router,
