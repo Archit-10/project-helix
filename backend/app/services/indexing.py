@@ -1,3 +1,4 @@
+from app.core.cache import Cache
 from app.lexical_store.base import LexicalStore
 from app.schemas.document_chunk import DocumentChunk
 from app.schemas.embedding import Embedding
@@ -17,11 +18,13 @@ class IndexingService:
         embedding_service: EmbeddingService,
         lexical_store: LexicalStore,
         vector_store: VectorStore,
+        cache: Cache,
     ) -> None:
         self.chunking_service = chunking_service
         self.embedding_service = embedding_service
         self.lexical_store = lexical_store
         self.vector_store = vector_store
+        self.cache = cache
 
     def index(
         self,
@@ -52,5 +55,5 @@ class IndexingService:
             )
 
             embeddings.append(embedding)
-
+        self.cache.clear()
         return chunks, embeddings

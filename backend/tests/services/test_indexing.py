@@ -2,6 +2,7 @@ from datetime import datetime
 from pathlib import Path
 from unittest.mock import Mock
 
+from app.core.cache_memory import InMemoryCache
 from app.schemas.document_chunk import DocumentChunk
 from app.schemas.document_metadata import DocumentMetadata
 from app.schemas.embedding import Embedding
@@ -48,17 +49,23 @@ def test_indexing_service():
     chunking_service.chunk.return_value = [chunk]
     embedding_service.embed.return_value = embedding
 
+    cache = InMemoryCache()
+
     service = IndexingService(
         chunking_service=chunking_service,
         embedding_service=embedding_service,
         lexical_store=lexical_store,
         vector_store=vector_store,
+        cache=cache,
     )
+
+    cache.set("test-key", "test-value")
 
     chunks, embeddings = service.index(document)
 
     assert chunks == [chunk]
     assert embeddings == [embedding]
+    assert cache.get("test-key") is None
 
     chunking_service.chunk.assert_called_once_with(document)
     embedding_service.embed.assert_called_once_with(chunk)

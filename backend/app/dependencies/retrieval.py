@@ -1,5 +1,6 @@
 from functools import lru_cache
 
+from app.dependencies.cache import get_cache
 from app.dependencies.stores import (
     get_lexical_store,
     get_vector_store,
@@ -33,9 +34,11 @@ def get_retrieval_service() -> HybridRetrievalService:
     )
 
     reranker = ScoreBasedReranker()
+    cache = get_cache()
 
     return HybridRetrievalService(
         semantic_service=semantic_service,
         lexical_service=lexical_service,
         reranker=reranker,
+        cache=cache,
     )

@@ -17,3 +17,15 @@ http_request_duration_seconds = Histogram(
     "HTTP request duration in seconds.",
     ["method", "path"],
 )
+
+cache_hits_total = Counter(
+    "cache_hits_total",
+    "Total number of cache hits.",
+    ["cache"],
+)
+
+cache_misses_total = Counter(
+    "cache_misses_total",
+    "Total number of cache misses.",
+    ["cache"],
+)
