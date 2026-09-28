@@ -1,7 +1,5 @@
 # Project Helix
 
-**Enterprise Engineering Knowledge Platform powered by Hybrid Retrieval-Augmented Generation (RAG)**
-
 Project Helix is a production-oriented engineering knowledge platform designed to retrieve, evaluate, and generate citation-backed answers from technical documentation.
 
 It combines **keyword retrieval, semantic vector search, reranking, caching, evaluation, authentication, authorization, and observability** into a modular backend system.
