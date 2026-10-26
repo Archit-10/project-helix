@@ -14,8 +14,14 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: str = "HS256"
     JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
+    LLM_PROVIDER: str = "ollama"
+
     OLLAMA_BASE_URL: str = "http://localhost:11434"
     OLLAMA_MODEL: str = "qwen2.5:3b"
+
+    GROQ_BASE_URL: str = "https://api.groq.com/openai/v1"
+    GROQ_API_KEY: str = ""
+    GROQ_MODEL: str = "llama-3.3-70b-versatile"
 
     model_config = SettingsConfigDict(
         env_file=".env",
