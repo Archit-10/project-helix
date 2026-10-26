@@ -1,4 +1,4 @@
-from app.config.settings import Settings, get_settings
+from app.config.settings import Settings
 from app.dependencies.llm import get_llm
 from app.llm.groq import GroqLLM
 from app.llm.ollama import OllamaLLM
@@ -46,4 +46,4 @@ def test_get_llm_groq(monkeypatch):
 
 
 def test_default_provider_is_ollama():
-    assert get_settings().LLM_PROVIDER == "ollama"
+    assert Settings.model_fields["LLM_PROVIDER"].default == "ollama"

@@ -2,6 +2,7 @@ from functools import lru_cache
 
 from app.config.settings import get_settings
 from app.llm.base import LLM
+from app.llm.gemini import GeminiLLM
 from app.llm.groq import GroqLLM
 from app.llm.ollama import OllamaLLM
 
@@ -15,5 +16,8 @@ def get_llm() -> LLM:
 
     if settings.LLM_PROVIDER == "groq":
         return GroqLLM(settings=settings)
+
+    if settings.LLM_PROVIDER == "gemini":
+        return GeminiLLM(settings=settings)
 
     raise ValueError(f"Unsupported LLM_PROVIDER: {settings.LLM_PROVIDER}")
