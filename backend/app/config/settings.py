@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     VERSION: str = "0.1.0"
     API_V1_STR: str = "/api/v1"
     ENV: str = "development"
+    DEMO_MODE: bool = False
 
     JWT_SECRET_KEY: str = "change-this-in-production"
     JWT_ALGORITHM: str = "HS256"
