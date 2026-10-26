@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.router import api_router
 from app.config.settings import get_settings
@@ -60,6 +61,15 @@ def create_app() -> FastAPI:
         version=settings.VERSION,
         lifespan=lifespan,
     )
+
+    if settings.FRONTEND_ORIGIN:
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=[settings.FRONTEND_ORIGIN],
+            allow_credentials=False,
+            allow_methods=["GET", "POST", "OPTIONS"],
+            allow_headers=["Content-Type", "Authorization"],
+        )
 
     app.add_middleware(HTTPLoggingMiddleware)
 

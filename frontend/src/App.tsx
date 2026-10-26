@@ -1,6 +1,8 @@
 import { useRef, useState } from 'react'
 import './App.css'
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '';
+
 type Citation = {
   document_id: string
   chunk_id: string
@@ -89,7 +91,7 @@ function App() {
     abortRef.current = controller
 
     try {
-      const response = await fetch('/api/v1/generate/stream', {
+      const response = await fetch(`${API_BASE_URL}/api/v1/generate/stream`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: question, top_k: 5 }),
