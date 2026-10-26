@@ -70,35 +70,33 @@ class HybridRetrievalService:
         if cached_results is not None:
             return cached_results
 
+        candidate_k = max(top_k * 4, 20)
+
         semantic_results = self.semantic_service.search(
             query=query,
-            top_k=top_k,
+            top_k=candidate_k,
             metadata_filter=metadata_filter,
         )
 
         lexical_results = self.lexical_service.search(
             query=query,
-            top_k=top_k,
+            top_k=candidate_k,
             metadata_filter=metadata_filter,
         )
 
         scores: dict[tuple[str, str], float] = {}
         result_map: dict[tuple[str, str], SearchResult] = {}
+        rrf_constant = 60
 
-        for result in semantic_results:
-            key = (result.document_id, result.chunk_id)
+        for ranked_results, weight in (
+            (semantic_results, self.semantic_weight),
+            (lexical_results, self.lexical_weight),
+        ):
+            for rank, result in enumerate(ranked_results, start=1):
+                key = (result.document_id, result.chunk_id)
 
-            scores[key] = scores.get(key, 0.0) + (self.semantic_weight * result.score)
-
-            result_map[key] = result
-
-        for result in lexical_results:
-            key = (result.document_id, result.chunk_id)
-
-            scores[key] = scores.get(key, 0.0) + (self.lexical_weight * result.score)
-
-            if key not in result_map:
-                result_map[key] = result
+                scores[key] = scores.get(key, 0.0) + (weight / (rrf_constant + rank))
+                result_map.setdefault(key, result)
 
         ranked_results = sorted(
             scores.items(),

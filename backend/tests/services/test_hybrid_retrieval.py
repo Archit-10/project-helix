@@ -80,13 +80,13 @@ def test_hybrid_retrieval(metadata: DocumentMetadata):
 
     semantic_service.search.assert_called_once_with(
         query="Kafka authentication",
-        top_k=3,
+        top_k=20,
         metadata_filter=None,
     )
 
     lexical_service.search.assert_called_once_with(
         query="Kafka authentication",
-        top_k=3,
+        top_k=20,
         metadata_filter=None,
     )
 
@@ -138,7 +138,7 @@ def test_hybrid_retrieval_merges_duplicate_results(metadata: DocumentMetadata):
     assert len(results) == 1
     assert results[0].chunk_id == "chunk-1"
     assert results[0].document_id == "doc-1"
-    assert results[0].score == 0.7
+    assert results[0].score == pytest.approx(1 / 61)
     assert results[0].content == "Kafka authentication content."
     assert results[0].metadata == metadata
 
@@ -184,7 +184,7 @@ def test_hybrid_retrieval_uses_custom_weights(metadata: DocumentMetadata):
     )
 
     assert len(results) == 1
-    assert results[0].score == pytest.approx(0.68)
+    assert results[0].score == pytest.approx(1 / 61)
     assert results[0].content == "Kafka authentication content."
     assert results[0].metadata == metadata
 
@@ -223,7 +223,7 @@ def test_hybrid_retrieval_with_only_semantic_results(
 
     assert len(results) == 1
     assert results[0].chunk_id == "chunk-1"
-    assert results[0].score == pytest.approx(0.45)
+    assert results[0].score == pytest.approx(0.5 / 61)
     assert results[0].content == "Kafka authentication content."
     assert results[0].metadata == metadata
 
@@ -262,7 +262,7 @@ def test_hybrid_retrieval_with_only_lexical_results(
 
     assert len(results) == 1
     assert results[0].chunk_id == "chunk-2"
-    assert results[0].score == pytest.approx(0.4)
+    assert results[0].score == pytest.approx(0.5 / 61)
     assert results[0].content == "Kafka authentication content."
     assert results[0].metadata == metadata
 
@@ -373,7 +373,7 @@ def test_hybrid_retrieval_caches_new_results(metadata: DocumentMetadata):
     assert len(results) == 1
     assert results[0].chunk_id == "chunk-1"
     assert results[0].document_id == "doc-1"
-    assert results[0].score == pytest.approx(0.45)
+    assert results[0].score == pytest.approx(0.5 / 61)
     assert results[0].content == "Kafka content."
     assert results[0].metadata == metadata
 

@@ -1,6 +1,5 @@
 from functools import lru_cache
 
-from app.chunkers.fixed_size import FixedSizeChunker
 from app.dependencies.cache import get_cache
 from app.dependencies.stores import (
     get_lexical_store,
@@ -14,11 +13,7 @@ from app.services.indexing import IndexingService
 
 @lru_cache
 def get_indexing_service() -> IndexingService:
-    chunker = FixedSizeChunker()
-
-    chunking_service = ChunkingService(
-        chunker=chunker,
-    )
+    chunking_service = ChunkingService()
 
     embedding_provider = SentenceTransformerProvider()
 
