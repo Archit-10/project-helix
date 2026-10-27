@@ -55,10 +55,10 @@ The goal is not simply to generate an answer, but to provide an answer that can 
 
 Helix combines two complementary retrieval strategies:
 
-* **BM25 keyword retrieval** for exact terminology, identifiers, API paths, configuration names, and error messages.
-* **Vector retrieval** for semantic similarity and concept-level matching.
-* Hybrid candidate combination improves coverage across both lexical and semantic queries.
-* Metadata filtering restricts retrieval to relevant subsets of the knowledge base.
+- **BM25 keyword retrieval** for exact terminology, identifiers, API paths, configuration names, and error messages.
+- **Vector retrieval** for semantic similarity and concept-level matching.
+- Hybrid candidate combination improves coverage across both lexical and semantic queries.
+- Metadata filtering restricts retrieval to relevant subsets of the knowledge base.
 
 ### Retrieval Evaluation
 
@@ -66,11 +66,11 @@ The retrieval pipeline includes evaluation capabilities for measuring search qua
 
 Current evaluation metrics include:
 
-* Recall@K
-* Precision@K
-* Mean Reciprocal Rank (MRR)
-* Citation precision
-* Answer exact match
+- Recall@K
+- Precision@K
+- Mean Reciprocal Rank (MRR)
+- Citation precision
+- Answer exact match
 
 Evaluation cases can contain expected chunks, retrieved results, cited chunks, generated answers, and expected answers.
 
@@ -86,11 +86,11 @@ Helix includes an application-level caching layer for expensive retrieval operat
 
 The cache:
 
-* Uses deterministic request keys.
-* Supports TTL-based expiration.
-* Includes query, result count, and metadata filters in retrieval keys.
-* Is invalidated after successful knowledge-base indexing.
-* Exposes cache hit/miss Prometheus metrics.
+- Uses deterministic request keys.
+- Supports TTL-based expiration.
+- Includes query, result count, and metadata filters in retrieval keys.
+- Is invalidated after successful knowledge-base indexing.
+- Exposes cache hit/miss Prometheus metrics.
 
 ### Authentication & Authorization
 
@@ -102,11 +102,11 @@ Authorization follows role-based access control (RBAC), allowing different permi
 
 Helix includes application observability through:
 
-* Structured logging
-* Request/response logging
-* Prometheus metrics
-* Cache hit/miss metrics
-* Retrieval and indexing metrics
+- Structured logging
+- Request/response logging
+- Prometheus metrics
+- Cache hit/miss metrics
+- Retrieval and indexing metrics
 
 The architecture is designed so that system behavior can be investigated rather than treated as a black box.
 
@@ -243,15 +243,24 @@ backend/
 
 The application is organized into separate API, service, core infrastructure, evaluation, schema, and model layers to keep responsibilities isolated.
 
+## Application Screenshots
+
+### Project Helix Interface
+
+![Project Helix chat interface](./docs/screenshots/project-helix-ui.png)
+
+### Grounded Answers with Source Citations
+
+![Helix answer with source citations](docs/screenshots/answer-with-citations.png)
 
 ## Getting Started
 
 ### Prerequisites
 
-* Python 3.12+
-* `uv`
-* Git
-* Docker *(optional)*
+- Python 3.12+
+- `uv`
+- Git
+- Docker _(optional)_
 
 Clone the repository:
 
@@ -359,10 +368,10 @@ Failures should be explicit instead of silently producing unreliable results.
 
 In progress:
 
-* [ ] Public demo
-* [ ] Hosted deployment
-* [ ] Demo frontend
-* [ ] Production-oriented LLM provider integration
+- [ ] Public demo
+- [ ] Hosted deployment
+- [ ] Demo frontend
+- [ ] Production-oriented LLM provider integration
 
 ## License
 
