@@ -1,6 +1,9 @@
 import { useRef, useState } from 'react'
 import './App.css'
 
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '';
 
 type Citation = {
@@ -49,6 +52,15 @@ const suggestions = [
     prompt: 'Explain retrieval-augmented generation and why it is useful.',
   },
 ]
+
+function normalizeMarkdown(content: string): string {
+  return content
+    .replace(/&#x20;/gi, ' ')
+    .replace(/\\\*/g, '*')
+    .replace(/\\#/g, '#')
+    .replace(/\\_/g, '_')
+}
+
 
 function App() {
   const [query, setQuery] = useState('')
@@ -353,14 +365,22 @@ function App() {
                         : ''}
                     </div>
                     <div className="message-text">
-                      {message.content || (
-                        <span className="typing-indicator">
-                          <i />
-                          <i />
-                          <i />
-                        </span>
-                      )}
-                    </div>
+  {message.content ? (
+    message.role === 'assistant' ? (
+      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+        {normalizeMarkdown(message.content)}
+      </ReactMarkdown>
+    ) : (
+      message.content
+    )
+  ) : (
+    <span className="typing-indicator">
+      <i />
+      <i />
+      <i />
+    </span>
+  )}
+</div>
 
                     {message.role === 'assistant' &&
                       message.citations &&
@@ -382,7 +402,7 @@ function App() {
                                 <span className="citation-file-icon">▤</span>
                                 <div className="citation-details">
                                   <strong>{citation.file_name}</strong>
-                                  <span>{citation.path}</span>
+                                  <span>Retrieved from knowledge base</span>
                                 </div>
                                 <span className="citation-number">
                                   {String(index + 1).padStart(2, '0')}
